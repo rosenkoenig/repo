@@ -26,6 +26,10 @@ public class Square : MonoBehaviour {
     [SerializeField]
     GameObject[] targetSquareFeedbacks;
 
+    [Tooltip("0 = PLAYER_0,\n1 = PLAYER_1,\n3= CANNOT")]
+    [SerializeField]
+    GameObject[] targetAfterSquareFeedbacks;
+
 
 
     // Use this for initialization
@@ -55,6 +59,10 @@ public class Square : MonoBehaviour {
         {
             targetSquareFeedbacks[i].SetActive(false);
         }
+        for (int i = 0; i < targetSquareFeedbacks.Length; i++)
+        {
+            targetAfterSquareFeedbacks[i].SetActive(false);
+        }
     }
 
     void UpdateVisual ()
@@ -82,6 +90,17 @@ public class Square : MonoBehaviour {
                 targetSquareFeedbacks[i].SetActive(false);
             else if (targetSquareFeedbacks[i].activeSelf != state)
                 targetSquareFeedbacks[i].SetActive(state);
+        }
+    }
+
+    public void SetTargetAfterSquareFeedbackActive(bool state, Owner _owner)
+    {
+        for (int i = 0; i < targetAfterSquareFeedbacks.Length; i++)
+        {
+            if (i != (int)_owner)
+                targetAfterSquareFeedbacks[i].SetActive(false);
+            else if (targetAfterSquareFeedbacks[i].activeSelf != state)
+                targetAfterSquareFeedbacks[i].SetActive(state);
         }
     }
 }

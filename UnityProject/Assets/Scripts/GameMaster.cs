@@ -11,6 +11,8 @@ public class GameMaster : MonoBehaviour {
 
     public int turnIndex = 0;
 
+    public System.Action onTurnEnds = null;
+
 	// Use this for initialization
     void Awake ()
     {
@@ -18,9 +20,11 @@ public class GameMaster : MonoBehaviour {
 
     }
 
-	void Start () {
-	
-	}
+	void Start ()
+    {
+        UpdateAllCardsInteractivity();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -38,7 +42,7 @@ public class GameMaster : MonoBehaviour {
         turnIndex = turnIndex == 0 ? 1 : 0;
         Crown.Instance.SetPowerCardState(false);
         UpdateAllCardsInteractivity();
-        Debug.Log(turnIndex);
+        if (onTurnEnds != null) onTurnEnds();
     }
 
     public bool isItsTurnToPlay (Owner owner)

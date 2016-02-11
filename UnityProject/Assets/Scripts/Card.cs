@@ -136,7 +136,8 @@ public class Card : MonoBehaviour {
     public void OnClick ()
     {
         if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) return;
-        
+
+        SetTargetSquareFeedbackActive(false);
 
         if ( Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner) )
         {

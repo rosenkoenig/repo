@@ -10,18 +10,23 @@ public class PowerCard : MonoBehaviour {
     [SerializeField]
     Text countText = null;
 
+    [SerializeField]
+    GameObject selectedFeedback = null;
+
     PlayerHandHUD myHandHUD = null;
 
 	// Use this for initialization
 	void Start () {
         myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
         crown = Crown.Instance;
+        crown.onPowerCardStateChanges += UpdateInteractivity;
+        GameMaster.Instance.onTurnEnds += UpdateInteractivity;
+        UpdateInteractivity();
     }
 	
 	// Update is called once per frame
 	void Update () {
         countText.text = myHandHUD.powerCardsCount.ToString();
-        Debug.Log((new Vector2(0, 1)).ToString());
     }
 
     public void OnClick ()
@@ -30,6 +35,23 @@ public class PowerCard : MonoBehaviour {
         {
             myHandHUD.powerCardsCount += crown.withPowerCard ? 1 : -1;
             crown.SetPowerCardState(!crown.withPowerCard);
+            selectedFeedback.SetActive(crown.withPowerCard);
         }
+    }
+
+    void UpdateInteractivity ()
+    {
+        if ( GameMaster.Instance.turnIndex != (int)owner)
+        {
+            GetComponent<Button>().interactable = false;
+            selectedFeedback.SetActive(false);
+        }
+        else
+        {
+            GetComponent<Button>().interactable = true;
+            bool targetState = crown.withPowerCard;
+            if (selectedFeedback.activeSelf != targetState) selectedFeedback.SetActive(targetState);
+        }
+        
     }
 }

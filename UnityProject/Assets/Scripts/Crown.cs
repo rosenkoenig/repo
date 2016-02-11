@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Crown : MonoBehaviour {
     public static Crown Instance;
@@ -39,11 +40,14 @@ public class Crown : MonoBehaviour {
         bool canGo = CanGoTo(square, owner, false);
         if (canGo)
         {
+            if (withPowerCard && square.owner == Owner.NONE) GameMaster.Instance.GetHandHUDFor(owner).powerCardsCount++;
+
             targetPosition = square.transform.position;
             if (displacementCoroutine != null ) StopCoroutine(displacementCoroutine);
             displacementCoroutine = StartCoroutine(Move());
             square.SetOwner(owner);
             currentSquare = square;
+
         }
 
         return canGo;
@@ -98,6 +102,18 @@ public class Crown : MonoBehaviour {
         {
             target.SetTargetSquareFeedbackActive(state, owner);
 
+            if ( true )
+            {
+                List<Card> cards = GameMaster.Instance.GetHandHUDFor(owner == Owner.PLAYER_0 ? Owner.PLAYER_1 : Owner.PLAYER_0).cards;
+                foreach (Card card in cards)
+                {
+                    Square targetAfter = Board.Instance.GetSquare(currentSquare.xIndex + (int)delta.x + (int)card.cardInfos.direction.x*card.cardInfos.nb_squares, currentSquare.yIndex + (int)delta.y + (int)card.cardInfos.direction.y * card.cardInfos.nb_squares);
+                    if (targetAfter != null)
+                    {
+                        targetAfter.SetTargetAfterSquareFeedbackActive(state, owner == Owner.PLAYER_0 ? Owner.PLAYER_1 : Owner.PLAYER_0);
+                    }
+                }
+            }
         }
     }
 
@@ -107,10 +123,11 @@ public class Crown : MonoBehaviour {
         {
             withPowerCard = state;
             powerCardFeedback.SetActive(state);
+            if (onPowerCardStateChanges != null) onPowerCardStateChanges();
         }
         
     }
-
+    public System.Action onPowerCardStateChanges = null;
 
     Coroutine displacementCoroutine = null;
     IEnumerator Move ()
