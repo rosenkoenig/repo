@@ -1,0 +1,118 @@
+fileFormatVersion: 2
+guid: 35dfe8c8e13a83743ba80f7901fe2669
+timeCreated: 1455208325
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: card_glaive_diago
+    21300002: card_glaive_h_v
+    21300004: card_bg
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: card_glaive_diago
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 648
+        width: 307
+        height: 329
+      alignment: 9
+      pivot: {x: 0.9067657, y: 0.9155433}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -125.377075, y: 27.786255}
+        - {x: -140.37708, y: -61.213745}
+        - {x: -273.37708, y: -253.21375}
+        - {x: -278.37708, y: -271.21375}
+        - {x: -278.37708, y: -301.21375}
+        - {x: -265.37708, y: -301.21375}
+        - {x: -226.37708, y: -292.21375}
+        - {x: 27.622925, y: -147.21375}
+        - {x: 28.622925, y: -119.213745}
+        - {x: 28.622925, y: 27.786255}
+    - name: card_glaive_h_v
+      rect:
+        serializedVersion: 2
+        x: 668
+        y: 419
+        width: 312
+        height: 106
+      alignment: 9
+      pivot: {x: 0.94622236, y: 0.48258224}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -20.221375, y: 54.846283}
+        - {x: -128.22137, y: 54.846283}
+        - {x: -294.22137, y: 16.846283}
+        - {x: -295.22137, y: 14.846283}
+        - {x: -295.22137, y: -3.153717}
+        - {x: -261.22137, y: -27.153717}
+        - {x: -91.221375, y: -51.153717}
+        - {x: -41.221375, y: -51.153717}
+        - {x: 6.7786255, y: -26.153717}
+        - {x: 16.778625, y: -11.153717}
+        - {x: 16.778625, y: 29.846283}
+    - name: card_bg
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 40
+        width: 591
+        height: 963
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -295.5, y: 481.5}
+        - {x: -295.5, y: -481.5}
+        - {x: 295.5, y: -481.5}
+        - {x: 295.5, y: 481.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

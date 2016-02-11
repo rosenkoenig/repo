@@ -32,6 +32,8 @@ public class Card : MonoBehaviour {
 
     public System.Action<Card> onCardIsPlayed = null;
 
+
+
     //visual
     [Header("Visual")]
     [SerializeField]
@@ -40,17 +42,94 @@ public class Card : MonoBehaviour {
     [SerializeField]
     Text distance_text = null;
 
+    [Tooltip("LEFT,\nUP_LEFT,\nUP,\nUP_RIGHT,\nRIGHT,\nDOWN_RIGHT,\nDOWN,\nDOWN_LEFT, ")]
+    [SerializeField]
+    Image[] spritePerDirection = null;
+
+
     void Start ()
     {
+        GetDirectionAsEnum();
         UpdateDisplay();
     }
 
     void UpdateDisplay ()
     {
         direction_text.text = cardInfos.direction.x.ToString()+","+ cardInfos.direction.y.ToString();
-        distance_text.text = cardInfos.nb_squares.ToString();
+        distance_text.text = TransformTheNumberIntoARomanNumber();
+
+        for ( int i = 0; i < spritePerDirection.Length; i++)
+        {
+            if (i == (int)_direction )
+            {
+                if (spritePerDirection[i].enabled == false) spritePerDirection[i].enabled = true;
+            }
+            else
+            {
+                spritePerDirection[i].enabled = false;
+            }
+        }
     }
 
+    string TransformTheNumberIntoARomanNumber (  )
+    {
+        switch (cardInfos.nb_squares)
+        {
+            case 1:
+                return "I";
+                break;
+            case 2:
+                return "II";
+                break;
+            case 3:
+                return "III";
+                break;
+        }
+        return "suce";
+    }
+
+    void GetDirectionAsEnum ()
+    {
+        Direction finalDirection = Direction.DOWN;
+
+
+        if (cardInfos.direction == new Vector2(-1, 0))
+        {
+            finalDirection = Direction.LEFT;
+        }
+        else if (cardInfos.direction == new Vector2(-1, 1))
+        {
+            finalDirection = Direction.UP_LEFT;
+        }
+        else if (cardInfos.direction == new Vector2(0, 1))
+        {
+            finalDirection = Direction.UP;
+        }
+        else if (cardInfos.direction == new Vector2(1, 1))
+        {
+            finalDirection = Direction.UP_RIGHT;
+        }
+        else if (cardInfos.direction == new Vector2(1, 0))
+        {
+            finalDirection = Direction.RIGHT;
+        }
+        else if (cardInfos.direction == new Vector2(1, -1))
+        {
+            finalDirection = Direction.DOWN_RIGHT;
+        }
+        else if (cardInfos.direction == new Vector2(0, -1))
+        {
+            finalDirection = Direction.DOWN;
+        }
+        else if (cardInfos.direction == new Vector2(-1, -1))
+        {
+            finalDirection = Direction.DOWN_LEFT;
+        }
+
+        _direction = finalDirection;
+
+    
+    }
    
 
     #region Inputs
