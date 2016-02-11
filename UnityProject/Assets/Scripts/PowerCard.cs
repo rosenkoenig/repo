@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PowerCard : MonoBehaviour {
+    Crown crown = null;
 
     public Owner owner = Owner.PLAYER_0;
 
@@ -14,7 +15,7 @@ public class PowerCard : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
-        
+        crown = Crown.Instance;
     }
 	
 	// Update is called once per frame
@@ -24,9 +25,10 @@ public class PowerCard : MonoBehaviour {
 
     public void OnClick ()
     {
-        if (myHandHUD.powerCardsCount > 0)
+        if ((myHandHUD.powerCardsCount > 0 || (myHandHUD.powerCardsCount == 0 && crown.withPowerCard)) && GameMaster.Instance.turnIndex == (int)owner)
         {
-            Crown.Instance.withPowerCard = !Crown.Instance.withPowerCard;
+            myHandHUD.powerCardsCount += crown.withPowerCard ? 1 : -1;
+            crown.SetPowerCardState(!crown.withPowerCard);
         }
     }
 }

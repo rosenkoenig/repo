@@ -36,7 +36,7 @@ public class GameMaster : MonoBehaviour {
     public void OnPlayerEndTurn ( )
     {
         turnIndex = turnIndex == 0 ? 1 : 0;
-        Crown.Instance.withPowerCard = false;
+        Crown.Instance.SetPowerCardState(false);
         UpdateAllCardsInteractivity();
         Debug.Log(turnIndex);
     }

@@ -8,11 +8,19 @@ public class Crown : MonoBehaviour {
 
     public bool withPowerCard = false;
 
+    [SerializeField]
+    GameObject powerCardFeedback = null;
+
+    [SerializeField]
+    float movementDamping = 0.3f;
+
+    Vector3 targetPosition = Vector3.zero;
+
     // Use this for initialization
     void Awake ()
     {
         Instance = this;
-
+        powerCardFeedback.SetActive(false);
     }
 
     void Start () {
@@ -31,10 +39,11 @@ public class Crown : MonoBehaviour {
         bool canGo = CanGoTo(square, owner, false);
         if (canGo)
         {
-            transform.position = square.transform.position;
+            targetPosition = square.transform.position;
+            if (displacementCoroutine != null ) StopCoroutine(displacementCoroutine);
+            displacementCoroutine = StartCoroutine(Move());
             square.SetOwner(owner);
             currentSquare = square;
-            if (withPowerCard) GameMaster.Instance.GetHandHUDFor(owner).powerCardsCount--;
         }
 
         return canGo;
@@ -90,5 +99,27 @@ public class Crown : MonoBehaviour {
             target.SetTargetSquareFeedbackActive(state, owner);
 
         }
+    }
+
+    public void SetPowerCardState ( bool state)
+    {
+        if ( state != withPowerCard )
+        {
+            withPowerCard = state;
+            powerCardFeedback.SetActive(state);
+        }
+        
+    }
+
+
+    Coroutine displacementCoroutine = null;
+    IEnumerator Move ()
+    {
+        while ((targetPosition - transform.position).magnitude > 0.02f )
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPosition, movementDamping);
+            yield return new WaitForEndOfFrame();
+        }
+
     }
 }
