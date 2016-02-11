@@ -32,7 +32,8 @@ public class Card : MonoBehaviour {
 
     public System.Action<Card> onCardIsPlayed = null;
 
-
+    RectTransform rectTransform = null;
+    LayoutGroup layoutGroup = null;
 
     //visual
     [Header("Visual")]
@@ -49,8 +50,11 @@ public class Card : MonoBehaviour {
 
     void Start ()
     {
+        rectTransform = GetComponent<RectTransform>();
+        layoutGroup = GetComponentInParent<LayoutGroup>();
         GetDirectionAsEnum();
         UpdateDisplay();
+        startParent = transform.parent;
     }
 
     void UpdateDisplay ()
@@ -133,18 +137,26 @@ public class Card : MonoBehaviour {
    
 
     #region Inputs
-    public void OnClick ()
+    bool ValidateInput ()
     {
-        if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) return;
+        if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) return false;
 
         SetTargetSquareFeedbackActive(false);
 
-        if ( Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner) )
+        if (Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner))
         {
             if (onCardIsPlayed != null) onCardIsPlayed(this);
             GameMaster.Instance.OnPlayerEndTurn();
             Destroy(gameObject);
+            return true;
         }
+
+        return false;
+    }
+
+    public void OnClick ()
+    {
+        //ValidateInput();
 
     }
 
@@ -185,4 +197,63 @@ public class Card : MonoBehaviour {
         
 
     }
+
+    bool dragging = false;
+    Vector3 startPos = Vector3.zero;
+    Transform startParent = null;
+    // DRAG DROP MANAGEMENT
+    public void OnBeginDrag ()
+    {
+        dragging = true;
+        startPos = transform.position;
+        OnMouseHover();
+    }
+
+    void Update ()
+    {
+        if (dragging)
+        {
+            transform.position = Input.mousePosition;
+
+            if (Mathf.Abs(Input.mousePosition.y - startPos.y) <= (rectTransform.rect.height * GetComponentInParent<Canvas>().scaleFactor))
+            {
+                GetComponent<LayoutElement>().ignoreLayout = false;
+            }
+            else
+            {
+                GetComponent<LayoutElement>().ignoreLayout = true;
+            }
+        }
+
+    }
+
+    public void OnEndDrag ()
+    {
+        dragging = false;
+
+        if ( Mathf.Abs(transform.position.y - startPos.y) >= (rectTransform.rect.height*GetComponentInParent<Canvas>().scaleFactor))
+        {
+            if ( ValidateInput() )
+            {
+
+            }
+            else
+            {
+                ReturnToHand();
+            }
+        }
+        else
+        {
+            ReturnToHand();
+        }
+        OnMouseOut();
+    }
+
+    void ReturnToHand ()
+    {
+        GetComponent<LayoutElement>().ignoreLayout = false;
+        layoutGroup.SetLayoutVertical();
+        layoutGroup.SetLayoutHorizontal();
+    }
+    
 }

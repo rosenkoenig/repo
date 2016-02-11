@@ -13,6 +13,8 @@ public class GameMaster : MonoBehaviour {
 
     public System.Action onTurnEnds = null;
 
+    public int availableTokens = 54;
+
 	// Use this for initialization
     void Awake ()
     {
@@ -65,5 +67,10 @@ public class GameMaster : MonoBehaviour {
 
         }
     
+    }
+
+    public void OnTokenUsed ()
+    {
+        availableTokens--;
     }
 }

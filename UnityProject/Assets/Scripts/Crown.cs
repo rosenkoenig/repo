@@ -58,14 +58,16 @@ public class Crown : MonoBehaviour {
     {
         Square target = Board.Instance.GetSquare(currentSquare.xIndex + (int)delta.x, currentSquare.yIndex +(int) delta.y);
 
+        if (target == null) return false;
+
        return  GoTo(target, owner);
     }
 
     public bool CanGoTo (Square square, Owner owner, bool simulatePowerCard)
     {
-        if ((simulatePowerCard || withPowerCard) && square.owner != owner) return true;
+        if ((simulatePowerCard || withPowerCard) && square.owner != owner && square.owner != Owner.NONE) return true;
 
-        bool squareIsAvailable = square.owner == Owner.NONE;
+        bool squareIsAvailable = square.owner == Owner.NONE && GameMaster.Instance.availableTokens > 0;
 
         if (!squareIsAvailable )
         {

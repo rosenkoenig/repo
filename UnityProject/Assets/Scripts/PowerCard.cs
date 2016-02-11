@@ -26,7 +26,7 @@ public class PowerCard : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        countText.text = myHandHUD.powerCardsCount.ToString();
+        countText.text = "("+myHandHUD.powerCardsCount.ToString()+")";
     }
 
     public void OnClick ()

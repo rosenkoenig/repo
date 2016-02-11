@@ -35,7 +35,7 @@ public class Square : MonoBehaviour {
     // Use this for initialization
     void Start () {
         InitVisuals();
-
+        GameMaster.Instance.onTurnEnds += ClearFeedbacks;
     }
 	
 	// Update is called once per frame
@@ -55,6 +55,12 @@ public class Square : MonoBehaviour {
     void InitVisuals()
     {
         UpdateVisual();
+        ClearFeedbacks();
+    }
+
+    void ClearFeedbacks ()
+    {
+
         for (int i = 0; i < targetSquareFeedbacks.Length; i++)
         {
             targetSquareFeedbacks[i].SetActive(false);
@@ -78,6 +84,11 @@ public class Square : MonoBehaviour {
 
     public void SetOwner ( Owner newOwner )
     {
+        if ( owner == Owner.NONE && newOwner != Owner.NONE)
+        {
+            GameMaster.Instance.OnTokenUsed();
+        }
+
         owner = newOwner;
         UpdateVisual();
     }
