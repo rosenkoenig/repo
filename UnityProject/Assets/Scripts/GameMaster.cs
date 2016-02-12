@@ -17,6 +17,9 @@ public class GameMaster : MonoBehaviour {
     [SerializeField]
     PlayerHandHUD[] playerHandHuds = new PlayerHandHUD[2];
 
+    [SerializeField]
+    AbstractInGameMenu pauseMenu = null;
+
     public int turnIndex = 0;
 
     public System.Action onTurnEnds = null;
@@ -37,7 +40,7 @@ public class GameMaster : MonoBehaviour {
     void Awake ()
     {
         Instance = this;
-
+        pauseMenu.gameObject.SetActive(false);
     }
 
 	void Start ()
@@ -60,11 +63,26 @@ public class GameMaster : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	if ( Input.GetKeyUp(KeyCode.Escape))
+        CheckPause();
+
+    }
+
+    void CheckPause ()
+    {
+
+        if (Input.GetKeyUp(KeyCode.Escape))
         {
-            SetGameState( gameState == GameState.PLAYING ? GameState.PAUSED : GameState.PLAYING);
+            if (pauseMenu.gameObject.activeInHierarchy)
+            {
+                pauseMenu.LeaveMenu();
+            }
+            else
+            {
+                pauseMenu.gameObject.SetActive(true);
+            }
+
         }
-	}
+    }
 
     public void SetGameState (GameState value)
     {
@@ -104,7 +122,7 @@ public class GameMaster : MonoBehaviour {
         {
             foreach (Card card in playerHand.cards)
             {
-                //card.UpdateInteractivity();
+                card.UpdateInteractivity();
             }
 
         }
