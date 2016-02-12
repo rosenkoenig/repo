@@ -57,8 +57,8 @@ public class PlayerTextHUD : MonoBehaviour {
 
         for (int i = 0; i < textsPerPlayer.Length; i++)
         {
-            titleTextsPerPlayer[i].text = "";
-            textsPerPlayer[i].text = "Your turn!";
+            titleTextsPerPlayer[i].text = "Your turn!";
+            textsPerPlayer[i].text = GameMaster.Instance.availableTokens.ToString()+" tokens left.";
         }
 
         duration = newTurnDuration;

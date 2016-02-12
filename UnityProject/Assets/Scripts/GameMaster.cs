@@ -20,6 +20,9 @@ public class GameMaster : MonoBehaviour {
     [SerializeField]
     AbstractInGameMenu pauseMenu = null;
 
+    [SerializeField]
+    float endTurnWaitDuration = 3f;
+
     public int turnIndex = 0;
 
     public System.Action onTurnEnds = null;
@@ -103,8 +106,21 @@ public class GameMaster : MonoBehaviour {
     {
         turnIndex = turnIndex == 0 ? 1 : 0;
         Crown.Instance.SetPowerCardState(false);
-        UpdateAllCardsInteractivity();
         if (onTurnEnds != null) onTurnEnds();
+        if (!CheckCanPlay((Owner)turnIndex))
+        {
+            if ( !CheckCanPlay((Owner)(turnIndex == 0 ? 1 : 0)))
+            {
+                // fin de partie
+                OnGameEnds();
+            }
+            else
+            {
+                StartCoroutine(PasseLeTour((Owner)turnIndex));
+                SetGameState(GameState.PAUSED);
+            }
+        }
+        UpdateAllCardsInteractivity();
     }
 
     public bool isItsTurnToPlay (Owner owner)
@@ -121,16 +137,61 @@ public class GameMaster : MonoBehaviour {
         {
             foreach (Card card in playerHand.cards)
             {
-                card.UpdateInteractivity();
+                if (card) card.UpdateInteractivity();
             }
 
         }
     
     }
 
+    bool CheckCanPlay ( Owner owner )
+    {
+        PlayerHandHUD curPlayHand = playerHandHuds[(int)owner];
+
+        if (curPlayHand.powerCardsCount <= 0 && availableTokens <= 0)
+        {
+            return false;
+        }
+
+        if (curPlayHand.cards.Count >= 5)
+        {
+            bool oneCardCanBePlayed = false;
+            foreach ( Card card in curPlayHand.cards)
+            {
+                if ( card.CanBePlayed())
+                {
+                    return true;
+                }
+            }
+
+            if ( !oneCardCanBePlayed )
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     public void OnTokenUsed ()
     {
         availableTokens--;
     }
+
+
+    IEnumerator PasseLeTour (Owner owner)
+    {
+        PlayerTextHUD.Instance.StartFeedback(owner, "Turn skipped", "You can't play anything.", endTurnWaitDuration);
+        yield return new WaitForSeconds(endTurnWaitDuration);
+        SetGameState(GameState.PLAYING);
+        OnPlayerEndTurn();
+    }
     
+
+    void OnGameEnds ()
+    {
+        //check winner ^^
+        PlayerTextHUD.Instance.StartFeedback((Owner)Random.Range(0,2), "Fin de partie", "On sait pas qui a gagné ^^", 100f);
+        SetGameState(GameState.FINISHED);
+    }
 }

@@ -78,11 +78,15 @@ public class Crown : MonoBehaviour {
             }
             else if (square.owner != Owner.NONE)
             {
-                if (GameMaster.Instance.availableTokens > 0 )
+                if (GameMaster.Instance.GetHandHUDFor(owner).powerCardsCount > 0 )
                     PlayerTextHUD.Instance.StartFeedback(owner, "Square occupied", "You need a Power Card.");
                 else
                     PlayerTextHUD.Instance.StartFeedback(owner, "Can't move", "No Power Cards left.");
 
+            }
+            else if (GameMaster.Instance.availableTokens <= 0)
+            {
+                PlayerTextHUD.Instance.StartFeedback(owner, "Can't move", "No tokens available.");
             }
         }
 

@@ -200,21 +200,29 @@ public class Card : MonoBehaviour {
 
     public void UpdateInteractivity ()
     {
-        if ( gameMaster.gameState > 0 )
+
+        
+        Button button = GetComponent<Button>();
+
+        if (gameMaster.gameState > 0)
         {
-            Debug.Log(gameMaster.gameState.ToString());
-            GetComponent<Button>().interactable = false;
+            button.interactable = false;
             return;
         }
 
+        button.interactable = CanBePlayed();
+    }
+
+    public bool CanBePlayed()
+    {
+        bool isItsTurnToPlay, canPlayThisCard;
+
         bool hasPowerCardsRemaining = gameMaster.GetHandHUDFor(cardInfos.owner).powerCardsCount > 0;
         bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining, false);
-        bool isItsTurnToPlay = gameMaster.isItsTurnToPlay(cardInfos.owner);
-        bool canPlayThisCard = canMove && isItsTurnToPlay;
-        Debug.Log("turn : " + isItsTurnToPlay + " turn = " + gameMaster.turnIndex + ", owner = " + cardInfos.owner);
-        GetComponent<Button>().interactable = canPlayThisCard;
-        
+        isItsTurnToPlay = gameMaster.isItsTurnToPlay(cardInfos.owner);
+        canPlayThisCard = canMove && isItsTurnToPlay;
 
+        return canPlayThisCard;
     }
 
     bool dragging = false;
@@ -298,4 +306,9 @@ public class Card : MonoBehaviour {
         OnMouseOut();
     }
     
+
+    void OnDestroy ()
+    {
+        gameMaster.simpleOnGameStateChanges -= UpdateInteractivity;
+    }
 }
