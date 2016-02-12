@@ -34,6 +34,8 @@ public class Card : MonoBehaviour {
 
     RectTransform rectTransform = null;
     LayoutGroup layoutGroup = null;
+    LayoutElement layoutElement = null;
+    GameMaster gameMaster = null;
 
     //visual
     [Header("Visual")]
@@ -52,9 +54,13 @@ public class Card : MonoBehaviour {
     {
         rectTransform = GetComponent<RectTransform>();
         layoutGroup = GetComponentInParent<LayoutGroup>();
+        layoutElement = GetComponent<LayoutElement>();
+        gameMaster = GameMaster.Instance;
+        gameMaster.simpleOnGameStateChanges += UpdateInteractivity;
         GetDirectionAsEnum();
         UpdateDisplay();
         startParent = transform.parent;
+        UpdateInteractivity();
     }
 
     void UpdateDisplay ()
@@ -81,13 +87,10 @@ public class Card : MonoBehaviour {
         {
             case 1:
                 return "I";
-                break;
             case 2:
                 return "II";
-                break;
             case 3:
                 return "III";
-                break;
         }
         return "suce";
     }
@@ -139,7 +142,7 @@ public class Card : MonoBehaviour {
     #region Inputs
     bool ValidateInput ()
     {
-        if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) {
+        if (!gameMaster.isItsTurnToPlay(cardInfos.owner)) {
             PlayerTextHUD.Instance.StartFeedback(cardInfos.owner, "Not your turn to play!", 3f);
             return false;
         }
@@ -151,7 +154,7 @@ public class Card : MonoBehaviour {
         if (canMove && Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner))
         {
             if (onCardIsPlayed != null) onCardIsPlayed(this);
-            GameMaster.Instance.OnPlayerEndTurn();
+           gameMaster.OnPlayerEndTurn();
             Destroy(gameObject);
             return true;
         }
@@ -193,11 +196,18 @@ public class Card : MonoBehaviour {
 
     public void UpdateInteractivity ()
     {
-        bool hasPowerCardsRemaining = GameMaster.Instance.GetHandHUDFor(cardInfos.owner).powerCardsCount > 0;
-        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining, false);
-        bool isItsTurnToPlay = GameMaster.Instance.isItsTurnToPlay(cardInfos.owner);
-        bool canPlayThisCard = canMove && isItsTurnToPlay;
+        if ( gameMaster.gameState > 0 )
+        {
+            Debug.Log(gameMaster.gameState.ToString());
+            GetComponent<Button>().interactable = false;
+            return;
+        }
 
+        bool hasPowerCardsRemaining = gameMaster.GetHandHUDFor(cardInfos.owner).powerCardsCount > 0;
+        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining, false);
+        bool isItsTurnToPlay = gameMaster.isItsTurnToPlay(cardInfos.owner);
+        bool canPlayThisCard = canMove && isItsTurnToPlay;
+        Debug.Log("turn : " + isItsTurnToPlay + " turn = " + gameMaster.turnIndex + ", owner = " + cardInfos.owner);
         GetComponent<Button>().interactable = canPlayThisCard;
         
 
@@ -209,29 +219,38 @@ public class Card : MonoBehaviour {
     // DRAG DROP MANAGEMENT
     public void OnBeginDrag ()
     {
-
-
-        
+        if (gameMaster.gameState <= 0)
+        {
             dragging = true;
             startPos = transform.position;
 
             OnMouseHover();
-        
+        }
     }
 
     void Update ()
     {
+        if (gameMaster.gameState > 0)
+        {
+            //if ( dragging )
+            //{
+            //    dragging = false;
+            //    ReturnToHand();
+            //}
+            return;
+        }
+
         if (dragging)
         {
             transform.position = Input.mousePosition;
 
             if (Mathf.Abs(Input.mousePosition.y - startPos.y) <= (rectTransform.rect.height * GetComponentInParent<Canvas>().scaleFactor))
             {
-                GetComponent<LayoutElement>().ignoreLayout = false;
+                layoutElement.ignoreLayout = false;
             }
             else
             {
-                GetComponent<LayoutElement>().ignoreLayout = true;
+                layoutElement.ignoreLayout = true;
             }
         }
 
@@ -239,12 +258,20 @@ public class Card : MonoBehaviour {
 
     public void OnEndDrag ()
     {
+
         dragging = false;
 
+        //release card if player releases while pausing
+        if (gameMaster.gameState > 0)
+        {
+            ReturnToHand();
+            return;
+        }
         if ( Mathf.Abs(transform.position.y - startPos.y) >= (rectTransform.rect.height*GetComponentInParent<Canvas>().scaleFactor))
         {
             if ( ValidateInput() )
             {
+                OnMouseOut();
 
             }
             else
@@ -256,14 +283,14 @@ public class Card : MonoBehaviour {
         {
             ReturnToHand();
         }
-        OnMouseOut();
     }
 
     void ReturnToHand ()
     {
-        GetComponent<LayoutElement>().ignoreLayout = false;
+        layoutElement.ignoreLayout = false;
         layoutGroup.SetLayoutVertical();
         layoutGroup.SetLayoutHorizontal();
+        OnMouseOut();
     }
     
 }

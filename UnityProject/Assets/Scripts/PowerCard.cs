@@ -14,23 +14,36 @@ public class PowerCard : MonoBehaviour {
     GameObject selectedFeedback = null;
 
     PlayerHandHUD myHandHUD = null;
+    GameMaster gameMaster = null;
 
 	// Use this for initialization
 	void Start () {
-        myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
         crown = Crown.Instance;
-        crown.onPowerCardStateChanges += UpdateInteractivity;
-        GameMaster.Instance.onTurnEnds += UpdateInteractivity;
-        UpdateInteractivity();
+        gameMaster = GameMaster.Instance;
+        gameMaster.onGameStarts += OnGameStarts;
+        crown.onPowerCardStateChanges += UpdatePowerCardInteractivity;
+        gameMaster.onTurnEnds += UpdatePowerCardInteractivity;
+        gameMaster.simpleOnGameStateChanges += UpdatePowerCardInteractivity;
+        UpdatePowerCardInteractivity();
+    }
+
+    void OnGameStarts ()
+    {
+        myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
+
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (gameMaster.gameState > 0) return;
+
         countText.text = "("+myHandHUD.powerCardsCount.ToString()+")";
     }
 
     public void OnClick ()
     {
+        if (gameMaster.gameState > 0) return;
+
         if ((myHandHUD.powerCardsCount > 0 || (myHandHUD.powerCardsCount == 0 && crown.withPowerCard)) && GameMaster.Instance.turnIndex == (int)owner)
         {
             myHandHUD.powerCardsCount += crown.withPowerCard ? 1 : -1;
@@ -39,16 +52,24 @@ public class PowerCard : MonoBehaviour {
         }
     }
 
-    void UpdateInteractivity ()
+    void UpdatePowerCardInteractivity ()
     {
+        Button button = GetComponent<Button>();
+        if ( gameMaster.gameState > 0 )
+        {
+            button.interactable = false;
+            selectedFeedback.SetActive(false);
+            return;
+        }
+
         if ( GameMaster.Instance.turnIndex != (int)owner)
         {
-            GetComponent<Button>().interactable = false;
+            button.interactable = false;
             selectedFeedback.SetActive(false);
         }
         else
         {
-            GetComponent<Button>().interactable = true;
+            button.interactable = true;
             bool targetState = crown.withPowerCard;
             if (selectedFeedback.activeSelf != targetState) selectedFeedback.SetActive(targetState);
         }

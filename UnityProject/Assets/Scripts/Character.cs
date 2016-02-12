@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Character : MonoBehaviour {
+public class Character : MonoBehaviour
+{
 
     [SerializeField]
     Owner owner = Owner.PLAYER_0;
@@ -11,13 +12,20 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        GameMaster.Instance.onGameStarts += OnGameStarts;
+	}
+
+    void OnGameStarts ()
+    {
+        GameMaster.Instance.onGameStarts -= OnGameStarts;
+
         myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
 
-        for ( int i =0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             DrawCard();
         }
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -33,5 +41,5 @@ public class Character : MonoBehaviour {
 
 
     }
-    
+
 }

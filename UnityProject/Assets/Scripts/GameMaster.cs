@@ -2,6 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum GameState
+{
+    PLAYING,
+    PAUSED,
+    NOT_STARTED,
+    FINISHED,
+}
+
 public class GameMaster : MonoBehaviour {
     public static GameMaster Instance;
 
@@ -15,6 +23,16 @@ public class GameMaster : MonoBehaviour {
 
     public int availableTokens = 54;
 
+    GameState _gameState = GameState.NOT_STARTED;
+    public GameState gameState
+    {
+        get { return _gameState;  }
+    }
+    public System.Action<GameState, GameState> onGameStateChanges = null;
+    public System.Action simpleOnGameStateChanges = null;
+    public System.Action onGameStarts = null;
+    public System.Action onLoadingIsOver = null;
+
 	// Use this for initialization
     void Awake ()
     {
@@ -24,14 +42,39 @@ public class GameMaster : MonoBehaviour {
 
 	void Start ()
     {
-        UpdateAllCardsInteractivity();
+        StartCoroutine("simulateLoading");
+    }
 
+    IEnumerator simulateLoading ()
+    {
+        yield return new WaitForSeconds(0.3f);
+        StartGame();
+    }
+
+    void StartGame ()
+    {
+        if (onLoadingIsOver != null) onLoadingIsOver();
+        SetGameState(GameState.PLAYING);
+        if (onGameStarts != null) onGameStarts();
     }
 	
 	// Update is called once per frame
 	void Update () {
-	
+	if ( Input.GetKeyUp(KeyCode.Escape))
+        {
+            SetGameState( gameState == GameState.PLAYING ? GameState.PAUSED : GameState.PLAYING);
+        }
 	}
+
+    public void SetGameState (GameState value)
+    {
+        if (_gameState != value)
+        {
+            if (onGameStateChanges != null) onGameStateChanges(_gameState, value);
+            _gameState = value;
+            if (simpleOnGameStateChanges != null) simpleOnGameStateChanges();
+        }
+    }
 
     public PlayerHandHUD GetHandHUDFor ( Owner owner )
     {
@@ -61,7 +104,7 @@ public class GameMaster : MonoBehaviour {
         {
             foreach (Card card in playerHand.cards)
             {
-                card.UpdateInteractivity();
+                //card.UpdateInteractivity();
             }
 
         }
@@ -72,4 +115,5 @@ public class GameMaster : MonoBehaviour {
     {
         availableTokens--;
     }
+    
 }

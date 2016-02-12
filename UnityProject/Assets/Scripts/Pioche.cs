@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -6,19 +7,22 @@ public class Pioche : MonoBehaviour {
     public static Pioche Instance;
 
 
-    [SerializeField]
     List<CardInfos> cards = new List<CardInfos>();
+
+    GameMaster gameMaster = null;
 
 	// Use this for initialization
     void Awake ()
     {
         Instance = this;
-        GenerateAllCards();
     }
 
 	void Start () {
-	
-	}
+        gameMaster = GameMaster.Instance;
+        gameMaster.onLoadingIsOver += GenerateAllCards;
+        gameMaster.simpleOnGameStateChanges += UpdateInteractivity;
+        UpdateInteractivity();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -123,5 +127,17 @@ public class Pioche : MonoBehaviour {
         }
 
         cards = shuffledDeck;
+    }
+
+    void UpdateInteractivity ()
+    {
+        Button[] buttons = GetComponentsInChildren<Button>();
+
+        bool mustBeInteractable = GameMaster.Instance.gameState == GameState.PLAYING;
+
+        foreach ( Button button in buttons )
+        {
+            button.interactable = mustBeInteractable;
+        }
     }
 }
