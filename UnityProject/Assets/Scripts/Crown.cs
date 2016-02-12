@@ -69,10 +69,21 @@ public class Crown : MonoBehaviour {
 
         bool squareIsAvailable = square.owner == Owner.NONE && GameMaster.Instance.availableTokens > 0;
 
-        if (!squareIsAvailable )
+        if (drawErrors )
         {
             Debug.Log("Cannot move to square because already occupied");
-            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Square occupied\nYou need a Power Card.", 3f);
+            if ( square.owner == owner )
+            {
+                PlayerTextHUD.Instance.StartFeedback(owner, "Can't move", "You already own this square.");
+            }
+            else if (square.owner != Owner.NONE)
+            {
+                if (GameMaster.Instance.availableTokens > 0 )
+                    PlayerTextHUD.Instance.StartFeedback(owner, "Square occupied", "You need a Power Card.");
+                else
+                    PlayerTextHUD.Instance.StartFeedback(owner, "Can't move", "No Power Cards left.");
+
+            }
         }
 
 
@@ -86,7 +97,7 @@ public class Crown : MonoBehaviour {
         if (target == null)
         {
             Debug.Log("Cannot move because out of board.");
-            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Can't move\nTarget square is out of board.", 3f);
+            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Can't move", "Target square is out of board.");
             return false;
         }
 

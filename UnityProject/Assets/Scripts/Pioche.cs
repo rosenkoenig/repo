@@ -95,7 +95,7 @@ public class Pioche : MonoBehaviour {
         if ( GameMaster.Instance.GetHandHUDFor(newOwner).cards.Count >= 5 )
         {
             Debug.Log("Cant draw because " + newOwner.ToString() + "'s hand is full.");
-            PlayerTextHUD.Instance.StartFeedback(newOwner, "Can't draw\nYour hand is full.", 3f);
+            PlayerTextHUD.Instance.StartFeedback(newOwner, "Can't draw", "Your hand is full.");
             return;
         }
 

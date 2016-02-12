@@ -49,13 +49,17 @@ public class Card : MonoBehaviour {
     [SerializeField]
     Image[] spritePerDirection = null;
 
+    void Awake ()
+    {
+
+        gameMaster = GameMaster.Instance;
+    }
 
     void Start ()
     {
         rectTransform = GetComponent<RectTransform>();
         layoutGroup = GetComponentInParent<LayoutGroup>();
         layoutElement = GetComponent<LayoutElement>();
-        gameMaster = GameMaster.Instance;
         gameMaster.simpleOnGameStateChanges += UpdateInteractivity;
         GetDirectionAsEnum();
         UpdateDisplay();
@@ -143,7 +147,7 @@ public class Card : MonoBehaviour {
     bool ValidateInput ()
     {
         if (!gameMaster.isItsTurnToPlay(cardInfos.owner)) {
-            PlayerTextHUD.Instance.StartFeedback(cardInfos.owner, "Not your turn to play!", 3f);
+            PlayerTextHUD.Instance.StartFeedback(cardInfos.owner,"", "Not your turn to play!", 1f);
             return false;
         }
 
@@ -277,6 +281,7 @@ public class Card : MonoBehaviour {
             else
             {
                 ReturnToHand();
+                if (Crown.Instance.withPowerCard) Crown.Instance.SetPowerCardState(false);
             }
         }
         else

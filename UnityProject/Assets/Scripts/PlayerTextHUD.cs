@@ -12,10 +12,16 @@ public class PlayerTextHUD : MonoBehaviour {
     float duration = 0.5f;
 
     [SerializeField]
+    float defaultDuration = 3f;
+
+    [SerializeField]
     float newTurnDuration = 0.5f;
 
     [SerializeField]
     GameObject[] visualPerPlayer = null;
+
+    [SerializeField]
+    Text[] titleTextsPerPlayer = null;
 
     [SerializeField]
     Text[] textsPerPlayer = null;
@@ -51,6 +57,7 @@ public class PlayerTextHUD : MonoBehaviour {
 
         for (int i = 0; i < textsPerPlayer.Length; i++)
         {
+            titleTextsPerPlayer[i].text = "";
             textsPerPlayer[i].text = "Your turn!";
         }
 
@@ -58,8 +65,8 @@ public class PlayerTextHUD : MonoBehaviour {
         if (timerCoroutineInstance != null) StopCoroutine(timerCoroutineInstance);
         timerCoroutineInstance = StartCoroutine("Timer");
     }
-
-    public void StartFeedback(Owner _owner, string text, float _duration)
+    
+    public void StartFeedback(Owner _owner, string titleText, string text, float _duration)
     {
         for (int i = 0; i < visualPerPlayer.Length; i++)
         {
@@ -70,6 +77,7 @@ public class PlayerTextHUD : MonoBehaviour {
         for (int i = 0; i < textsPerPlayer.Length; i++)
         {
             textsPerPlayer[i].text = text;
+            titleTextsPerPlayer[i].text = titleText;
         }
 
         if ( _duration > 0 )
@@ -79,6 +87,10 @@ public class PlayerTextHUD : MonoBehaviour {
             timerCoroutineInstance = StartCoroutine("Timer");
         }
 
+    }
+    public void StartFeedback(Owner _owner, string titleText, string text)
+    {
+        StartFeedback(_owner, titleText, text, defaultDuration);
     }
 
     IEnumerator Timer ()
