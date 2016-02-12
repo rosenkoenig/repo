@@ -21,10 +21,7 @@ public class Character : MonoBehaviour
 
         myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
 
-        for (int i = 0; i < 5; i++)
-        {
-            DrawCard();
-        }
+        StartCoroutine("DrawAllCards");
     }
 	
 	// Update is called once per frame
@@ -42,4 +39,15 @@ public class Character : MonoBehaviour
 
     }
 
+    IEnumerator DrawAllCards ()
+    {
+        yield return new WaitForSeconds(0.3f);
+        for (int i = 0; i < 5; i++)
+        {
+            DrawCard();
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        GameMaster.Instance.SetGameState(GameState.PLAYING);
+    }
 }

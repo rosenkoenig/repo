@@ -72,7 +72,7 @@ public class Crown : MonoBehaviour {
         if (!squareIsAvailable )
         {
             Debug.Log("Cannot move to square because already occupied");
-            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "You need a Power Card.", 3f);
+            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Square occupied\nYou need a Power Card.", 3f);
         }
 
 
@@ -86,7 +86,7 @@ public class Crown : MonoBehaviour {
         if (target == null)
         {
             Debug.Log("Cannot move because out of board.");
-            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Cannot move because out of board.", 3f);
+            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Can't move\nTarget square is out of board.", 3f);
             return false;
         }
 

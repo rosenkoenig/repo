@@ -57,7 +57,6 @@ public class GameMaster : MonoBehaviour {
     void StartGame ()
     {
         if (onLoadingIsOver != null) onLoadingIsOver();
-        SetGameState(GameState.PLAYING);
         if (onGameStarts != null) onGameStarts();
     }
 	

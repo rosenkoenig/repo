@@ -51,7 +51,7 @@ public class PlayerTextHUD : MonoBehaviour {
 
         for (int i = 0; i < textsPerPlayer.Length; i++)
         {
-            textsPerPlayer[i].text = "Nouveau Tour\nA vous!";
+            textsPerPlayer[i].text = "Your turn!";
         }
 
         duration = newTurnDuration;
@@ -94,5 +94,7 @@ public class PlayerTextHUD : MonoBehaviour {
         {
             visualPerPlayer[i].SetActive(false);
         }
+
+        if (timerCoroutineInstance != null) StopCoroutine(timerCoroutineInstance);
     }
 }
