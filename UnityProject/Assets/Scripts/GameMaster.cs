@@ -51,7 +51,6 @@ public class GameMaster : MonoBehaviour {
     {
         if (turnIndex == (int)owner) return true;
         else {
-            Debug.Log("Not your turn to play.");
             return false;
         }
     }

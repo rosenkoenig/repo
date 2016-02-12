@@ -37,7 +37,7 @@ public class Crown : MonoBehaviour {
 
     public bool GoTo ( Square square, Owner owner )
     {
-        bool canGo = CanGoTo(square, owner, false);
+        bool canGo = CanGoTo(square, owner, false, false);
         if (canGo)
         {
             if (withPowerCard && square.owner == Owner.NONE) GameMaster.Instance.GetHandHUDFor(owner).powerCardsCount++;
@@ -63,7 +63,7 @@ public class Crown : MonoBehaviour {
        return  GoTo(target, owner);
     }
 
-    public bool CanGoTo (Square square, Owner owner, bool simulatePowerCard)
+    public bool CanGoTo (Square square, Owner owner, bool simulatePowerCard, bool drawErrors)
     {
         if ((simulatePowerCard || withPowerCard) && square.owner != owner && square.owner != Owner.NONE) return true;
 
@@ -72,23 +72,25 @@ public class Crown : MonoBehaviour {
         if (!squareIsAvailable )
         {
             Debug.Log("Cannot move to square because already occupied");
+            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "You need a Power Card.", 3f);
         }
 
 
         return squareIsAvailable;
     }
 
-    public bool CanGoTo(Vector2 delta, Owner owner, bool simulatePowerCard)
+    public bool CanGoTo(Vector2 delta, Owner owner, bool simulatePowerCard, bool drawErrors)
     {
         Square target = Board.Instance.GetSquare(currentSquare.xIndex + (int)delta.x, currentSquare.yIndex + (int)delta.y);
 
         if (target == null)
         {
             Debug.Log("Cannot move because out of board.");
+            if (drawErrors) PlayerTextHUD.Instance.StartFeedback(owner, "Cannot move because out of board.", 3f);
             return false;
         }
 
-        return CanGoTo(target, owner, simulatePowerCard);
+        return CanGoTo(target, owner, simulatePowerCard, drawErrors);
     }
 
     public void DisplayTargetSquareFeedback (bool state, Vector2 delta, Owner owner)

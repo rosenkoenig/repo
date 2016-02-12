@@ -139,11 +139,16 @@ public class Card : MonoBehaviour {
     #region Inputs
     bool ValidateInput ()
     {
-        if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) return false;
+        if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) {
+            PlayerTextHUD.Instance.StartFeedback(cardInfos.owner, "Not your turn to play!", 3f);
+            return false;
+        }
 
         SetTargetSquareFeedbackActive(false);
 
-        if (Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner))
+        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, Crown.Instance.withPowerCard, true);
+
+        if (canMove && Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner))
         {
             if (onCardIsPlayed != null) onCardIsPlayed(this);
             GameMaster.Instance.OnPlayerEndTurn();
@@ -176,7 +181,7 @@ public class Card : MonoBehaviour {
     {
         // if (!GameMaster.Instance.isItsTurnToPlay(cardInfos.owner)) return;
         bool hasPowerCardsRemaining = GameMaster.Instance.GetHandHUDFor(cardInfos.owner).powerCardsCount > 0;
-        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining);
+        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining, false);
 
         if (!canMove)
         {
@@ -189,7 +194,7 @@ public class Card : MonoBehaviour {
     public void UpdateInteractivity ()
     {
         bool hasPowerCardsRemaining = GameMaster.Instance.GetHandHUDFor(cardInfos.owner).powerCardsCount > 0;
-        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining);
+        bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, hasPowerCardsRemaining, false);
         bool isItsTurnToPlay = GameMaster.Instance.isItsTurnToPlay(cardInfos.owner);
         bool canPlayThisCard = canMove && isItsTurnToPlay;
 
@@ -204,9 +209,14 @@ public class Card : MonoBehaviour {
     // DRAG DROP MANAGEMENT
     public void OnBeginDrag ()
     {
-        dragging = true;
-        startPos = transform.position;
-        OnMouseHover();
+
+
+        
+            dragging = true;
+            startPos = transform.position;
+
+            OnMouseHover();
+        
     }
 
     void Update ()
