@@ -13,11 +13,14 @@ public class PlayerHandHUD : MonoBehaviour {
     public int powerCardsCount = 0;
 
     public Owner owner = Owner.NONE;
-    
+
+    [SerializeField]
+    Transform cardParent = null;
 
     // Use this for initialization
     void Start () {
         powerCardsCount = 4;
+        if (cardParent == null) cardParent = transform;
     }
 	
 	// Update is called once per frame
@@ -28,7 +31,7 @@ public class PlayerHandHUD : MonoBehaviour {
     public void AddCard ( CardInfos cardInfos )
     {
         GameObject Host = GameObject.Instantiate(cardPrefab);
-        Host.transform.SetParent(transform);
+        Host.transform.SetParent(cardParent);
 
         Card visualCard = Host.GetComponent<Card>();
 
