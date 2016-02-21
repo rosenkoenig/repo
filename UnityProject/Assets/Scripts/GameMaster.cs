@@ -15,7 +15,7 @@ public class GameMaster : MonoBehaviour {
 
     [Tooltip("0 = PLAYER_0,\n1 = PLAYER_1")]
     [SerializeField]
-    PlayerHandHUD[] playerHandHuds = new PlayerHandHUD[2];
+    public PlayerHandHUD[] playerHandHuds = new PlayerHandHUD[2];
 
     [SerializeField]
     AbstractInGameMenu pauseMenu = null;
@@ -48,16 +48,16 @@ public class GameMaster : MonoBehaviour {
 
 	void Start ()
     {
-        StartCoroutine("simulateLoading");
+        //StartCoroutine("simulateLoading");
     }
 
     IEnumerator simulateLoading ()
     {
         yield return new WaitForSeconds(0.3f);
-        StartGame();
+        //StartGame();
     }
 
-    void StartGame ()
+    public void StartGame ()
     {
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();

@@ -14,8 +14,8 @@ public class PlayerHandHUD : MonoBehaviour {
 
     public Owner owner = Owner.NONE;
 
-    [SerializeField]
-    Transform cardParent = null;
+    //[SerializeField]
+    public Transform cardParent = null;
 
     // Use this for initialization
     void Start () {

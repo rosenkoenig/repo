@@ -5,20 +5,20 @@ using System.Collections.Generic;
 public class Character : MonoBehaviour
 {
 
-    [SerializeField]
-    Owner owner = Owner.PLAYER_0;
+    //[SerializeField]
+    public Owner owner = Owner.PLAYER_0;
 
     PlayerHandHUD myHandHUD = null;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         GameMaster.Instance.onGameStarts += OnGameStarts;
 	}
 
     void OnGameStarts ()
     {
         GameMaster.Instance.onGameStarts -= OnGameStarts;
-
+        
         myHandHUD = GameMaster.Instance.GetHandHUDFor(owner);
 
         StartCoroutine("DrawAllCards");
@@ -48,6 +48,6 @@ public class Character : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
 
-        GameMaster.Instance.SetGameState(GameState.PLAYING);
+        //GameMaster.Instance.SetGameState(GameState.PLAYING);
     }
 }
