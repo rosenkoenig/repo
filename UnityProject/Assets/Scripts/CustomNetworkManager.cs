@@ -13,7 +13,7 @@ public class CustomNetworkManager : NetworkManager {
         GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         playerInstances.Add(player);
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
-        StartCoroutine(CheckAllPlayersSpawned());
+        if (playerInstances.Count >= 2) GameMaster.Instance.OnAllPlayersCreated();
     }
 
     IEnumerator CheckAllPlayersSpawned ()
@@ -31,8 +31,8 @@ public class CustomNetworkManager : NetworkManager {
                     }
                 }
 
-                GameMaster.Instance.OnAllPlayersCreated();
-                allAreReady = true;
+              GameMaster.Instance.OnAllPlayersCreated();
+              allAreReady = true;
             }
             
         }

@@ -68,7 +68,27 @@ public class GameMaster : NetworkBehaviour {
     {
         Debug.Log("RPC StartGame, launch StartGame", this);
 
-        StartGame();
+        StartCoroutine(CheckPlayers());
+    }
+
+    IEnumerator CheckPlayers ()
+    {
+        NetworkPlayerCreate[] npcs = FindObjectsOfType<NetworkPlayerCreate>();
+
+        bool allAreReady = false;
+        while (!allAreReady)
+        {
+            foreach (NetworkPlayerCreate npc in npcs)
+            {
+                if (!npc.isReady)
+                {
+                    yield return null;
+                }
+            }
+
+            StartGame();
+            allAreReady = true;
+        }
     }
 
     void StartGame ()
