@@ -6,3 +6,5 @@
 /UnityProject/UnityProject.sln
 UnityProject/Library/
 UnityProject/Temp/
+UnityProject/UnityProject.CSharp.Plugins.csproj
+*.csproj
