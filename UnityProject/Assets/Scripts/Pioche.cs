@@ -84,9 +84,13 @@ public class Pioche : MonoBehaviour {
     {
         CardInfos toReturn = cards[0];
 
-        cards.RemoveAt(0);
-
         return toReturn;
+    }
+
+    public void RemoveFirstCard ()
+    {
+
+        cards.RemoveAt(0);
     }
 
     public void OnDrawButton()
@@ -100,11 +104,7 @@ public class Pioche : MonoBehaviour {
             return;
         }
 
-        CardInfos newCard = DrawCard();
-        newCard.owner = newOwner;
-        GameMaster.Instance.GetHandHUDFor(newOwner).AddCard(newCard);
-
-        GameMaster.Instance.OnPlayerEndTurn();
+        GameMaster.Instance.OnDrawButton();
     }
 
     public void AddCardInPile (CardInfos cardInfo)

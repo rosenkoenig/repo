@@ -247,6 +247,17 @@ public class GameMaster : NetworkBehaviour {
 
     }
 
+    public void OnDrawButton ()
+    {
+        playerHandHuds[turnIndex].Cmd_OnDrawButton();
+    }
+
+    [ClientRpc]
+    public void Rpc_ApplyDraw ()
+    {
+
+        playerHandHuds[turnIndex].AddCard();
+    }
    
 
     [ClientRpc]

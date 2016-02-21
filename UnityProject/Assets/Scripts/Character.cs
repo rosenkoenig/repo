@@ -32,9 +32,7 @@ public class Character : MonoBehaviour
     void DrawCard ()
     {
 
-        CardInfos drawnCard = Pioche.Instance.DrawCard();
-        drawnCard.owner = owner;
-        myHandHUD.AddCard(drawnCard);
+        myHandHUD.AddCard(owner);
 
 
     }

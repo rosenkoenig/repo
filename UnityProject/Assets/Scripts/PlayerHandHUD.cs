@@ -28,8 +28,18 @@ public class PlayerHandHUD : NetworkBehaviour {
 	
 	}
 
-    public void AddCard ( CardInfos cardInfos )
+    public void AddCard ( )
     {
+        AddCard(owner);
+    }
+
+    public void AddCard( Owner _owner )
+    {
+        CardInfos cardInfos = Pioche.Instance.DrawCard();
+        cardInfos.owner = _owner;
+        Pioche.Instance.RemoveFirstCard();
+        GameMaster.Instance.OnPlayerEndTurn();
+
         GameObject Host = GameObject.Instantiate(cardPrefab);
         Host.transform.SetParent(cardParent);
 
@@ -41,6 +51,17 @@ public class PlayerHandHUD : NetworkBehaviour {
         Host.transform.localScale = Vector3.one;
 
         cards.Add(visualCard);
+    }
+
+
+    [Command]
+    public void Cmd_OnDrawButton ()
+    {
+        if ( isServer )
+        {
+            GameMaster.Instance.Rpc_ApplyDraw();
+        }
+        
     }
 
     public void UseCard (int id)
