@@ -12,7 +12,8 @@ public class NetworkPlayerCreate : NetworkBehaviour
         //SetOwner();
     }
 
-    public void SetOwner()
+    [ClientRpc]
+    public void RpcSetOwner()
     {
         Debug.Log("Set Owner , isLocalPlayer = " + isLocalPlayer, this);
         if (!isLocalPlayer)

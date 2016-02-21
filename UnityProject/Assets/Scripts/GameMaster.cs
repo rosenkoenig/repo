@@ -80,7 +80,7 @@ public class GameMaster : NetworkBehaviour {
     {
         Debug.Log("RPC StartGame, launch OnGameStarts", this);
 
-        wait();
+        StartCoroutine(wait());
     }
 	
 
@@ -88,6 +88,7 @@ public class GameMaster : NetworkBehaviour {
     {
 
         yield return new WaitForSeconds(2f);
+
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();
     }

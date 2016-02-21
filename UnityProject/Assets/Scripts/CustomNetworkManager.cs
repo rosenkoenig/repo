@@ -13,23 +13,29 @@ public class CustomNetworkManager : NetworkManager {
         GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         playerInstances.Add(player);
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
-        player.GetComponent<NetworkPlayerCreate>().SetOwner();
-        CheckAllPlayersSpawned();
+        player.GetComponent<NetworkPlayerCreate>().RpcSetOwner();
+        StartCoroutine(CheckAllPlayersSpawned());
     }
 
-    void CheckAllPlayersSpawned ()
+    IEnumerator CheckAllPlayersSpawned ()
     {
         if ( playerInstances.Count >= 2)
         {
-            foreach ( GameObject go in playerInstances)
+            bool allAreReady = false;
+            while (!allAreReady)
             {
-                if ( !go.GetComponent<NetworkPlayerCreate>().isReady)
+                foreach (GameObject go in playerInstances)
                 {
-                    return;
+                    if (!go.GetComponent<NetworkPlayerCreate>().isReady)
+                    {
+                        yield return null;
+                    }
                 }
-            }
 
-            GameMaster.Instance.OnAllPlayersCreated();
+                GameMaster.Instance.OnAllPlayersCreated();
+                allAreReady = true;
+            }
+            
         }
     }
 }
