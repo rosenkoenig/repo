@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 public enum GameState
 {
@@ -48,17 +49,32 @@ public class GameMaster : MonoBehaviour {
 
 	void Start ()
     {
-        //StartCoroutine("simulateLoading");
+        StartCoroutine("simulateLoading");
+        
+    }
+
+    public void DirtyLaunch ()
+    {
+        Debug.LogWarning("Non non non je suis temporaire");
+
+        StartCoroutine("simulateLoading");
     }
 
     IEnumerator simulateLoading ()
     {
-        yield return new WaitForSeconds(0.3f);
-        //StartGame();
+
+        while (NetworkServer.connections.Count < 2)
+        {
+
+            yield return null;
+
+        }
+        StartGame();
     }
 
     public void StartGame ()
     {
+        Debug.Log("StartGame");
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();
     }

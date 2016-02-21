@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
         GameMaster.Instance.onGameStarts += OnGameStarts;
 	}
 
-    void OnGameStarts ()
+    public void OnGameStarts ()
     {
         GameMaster.Instance.onGameStarts -= OnGameStarts;
         

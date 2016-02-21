@@ -28,10 +28,22 @@ public class NetworkPlayerCreate : NetworkBehaviour
         }
     }
 
+    public override void OnStartServer ()
+    {
+        Debug.Log("OnStartServer");
+
+    }
+
+    public override void OnStartClient ()
+    {
+        Debug.Log("OnStartClient "+ isLocalPlayer+" et isServer :"+isServer, this);
+        SetOwner();
+    }
+
     public override void OnStartLocalPlayer()
     {
+        Debug.Log("OnStartLocalPlayer "+isLocalPlayer, this);
         SetOwner();
-
-        GameMaster.Instance.StartGame();
+       // GetComponent<Character>().OnGameStarts();
     }
 }
