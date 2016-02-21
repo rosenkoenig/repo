@@ -30,6 +30,7 @@ public class GameMaster : NetworkBehaviour {
 
     public int availableTokens = 54;
 
+    [SerializeField]
     GameState _gameState = GameState.NOT_STARTED;
     public GameState gameState
     {
@@ -52,19 +53,6 @@ public class GameMaster : NetworkBehaviour {
         
     }
 
-    public void DirtyLaunch ()
-    {
-        Debug.LogWarning("Non non non je suis temporaire");
-
-        StartCoroutine("simulateLoading");
-    }
-
-    public override void OnStartServer()
-    {
-        Debug.Log("OnStartServer GameMaster", this);
-        base.OnStartServer();
-    }
-
     public void OnAllPlayersCreated ()
     {
         if ( isServer )
@@ -78,20 +66,21 @@ public class GameMaster : NetworkBehaviour {
     [ClientRpc]
     public void RpcStartGame ()
     {
-        Debug.Log("RPC StartGame, launch OnGameStarts", this);
+        Debug.Log("RPC StartGame, launch StartGame", this);
 
-        StartCoroutine(wait());
+        StartGame();
     }
-	
 
-    IEnumerator wait ()
+    void StartGame ()
     {
 
-        yield return new WaitForSeconds(2f);
 
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();
+
+        SetGameState(GameState.PLAYING);
     }
+
 	// Update is called once per frame
 	void Update () {
         CheckPause();
