@@ -58,9 +58,18 @@ public class GameMaster : NetworkBehaviour {
         if ( isServer )
         {
             Debug.Log("OnAllPLayersCreated", this);
-            RpcStartGame();
+
+            Rpc_ApplySeed();
         }
         
+    }
+
+    [ClientRpc]
+    void Rpc_ApplySeed()
+    {
+        Pioche.Instance.Shuffle(125);
+
+        RpcStartGame();
     }
 
     [ClientRpc]
