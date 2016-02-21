@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 public class Pioche : MonoBehaviour {
     public static Pioche Instance;
-
-
+    
     List<CardInfos> cards = new List<CardInfos>();
 
     GameMaster gameMaster = null;
@@ -75,8 +74,6 @@ public class Pioche : MonoBehaviour {
             }
 
         }
-
-        Shuffle();
     }
 
     public CardInfos DrawCard ()
@@ -112,8 +109,9 @@ public class Pioche : MonoBehaviour {
 
     }
 
-    void Shuffle ()
+    public void Shuffle ( int seed )
     {
+        Random.seed = seed;
         List<CardInfos> deck = cards;
         List<CardInfos> shuffledDeck = new List<CardInfos>();
         int deckCount = deck.Count;

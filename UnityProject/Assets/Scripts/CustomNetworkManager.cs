@@ -31,10 +31,31 @@ public class CustomNetworkManager : NetworkManager {
                     }
                 }
 
-              GameMaster.Instance.OnAllPlayersCreated();
+              
+                AllPlayersConnected();
               allAreReady = true;
             }
             
         }
+    }
+
+    void AllPlayersConnected ()
+    {
+
+        Rpc_ApplySeed();
+        
+    }
+
+    [ClientRpc]
+    void Rpc_ApplySeed ()
+    {
+        Pioche.Instance.Shuffle(125);
+        StartGame();
+    }
+
+    [Command]
+    void StartGame ()
+    {
+        GameMaster.Instance.OnAllPlayersCreated();
     }
 }
