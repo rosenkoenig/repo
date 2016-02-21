@@ -16,9 +16,11 @@ public class Pioche : MonoBehaviour {
         Instance = this;
     }
 
-	void Start () {
+	void Start ()
+    {
+        GenerateAllCards();
         gameMaster = GameMaster.Instance;
-        gameMaster.onLoadingIsOver += GenerateAllCards;
+        //gameMaster.onLoadingIsOver += GenerateAllCards;
         gameMaster.simpleOnGameStateChanges += UpdateInteractivity;
         UpdateInteractivity();
     }
