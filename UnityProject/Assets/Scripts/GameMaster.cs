@@ -74,13 +74,14 @@ public class GameMaster : NetworkBehaviour {
             yield return null;
 
         }
-        StartGame();
+        RpcStartGame();
     }
 
     [ClientRpc]
-    public void StartGame ()
+    public void RpcStartGame ()
     {
         Debug.Log("StartGame");
+        
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();
     }
