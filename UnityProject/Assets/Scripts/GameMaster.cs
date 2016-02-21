@@ -75,6 +75,7 @@ public class GameMaster : NetworkBehaviour {
             yield return null;
 
         }
+        yield return new WaitForEndOfFrame();
         RpcStartGame();
     }
 
