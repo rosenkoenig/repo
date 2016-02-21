@@ -59,15 +59,15 @@ public class GameMaster : NetworkBehaviour {
         {
             Debug.Log("OnAllPLayersCreated", this);
 
-            Rpc_ApplySeed();
+            int seed = System.Environment.TickCount;
+            Rpc_ApplySeed(seed);
         }
         
     }
 
     [ClientRpc]
-    void Rpc_ApplySeed()
+    void Rpc_ApplySeed( int seed )
     {
-        int seed = System.Environment.TickCount;
         Pioche.Instance.Shuffle(seed);
 
         if (isServer)
