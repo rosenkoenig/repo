@@ -20,7 +20,7 @@ public class PlayerHandHUD : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        Cmd_SetPowerCardsCount (4);
+        if ( isLocalPlayer ) Cmd_SetPowerCardsCount (4);
         if (cardParent == null) cardParent = transform;
     }
 	

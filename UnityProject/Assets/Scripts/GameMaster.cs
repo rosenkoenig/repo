@@ -249,7 +249,11 @@ public class GameMaster : NetworkBehaviour {
 
     public void OnDrawButton ()
     {
-        playerHandHuds[turnIndex].Cmd_OnDrawButton();
+       if (playerHandHuds[turnIndex].isLocalPlayer) playerHandHuds[turnIndex].Cmd_OnDrawButton();
+       else
+        {
+            PlayerTextHUD.Instance.StartFeedback(Owner.PLAYER_0, "", "Not your turn to play!", 1f);
+        }
     }
 
     [ClientRpc]
