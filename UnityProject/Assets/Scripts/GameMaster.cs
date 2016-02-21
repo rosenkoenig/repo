@@ -61,28 +61,34 @@ public class GameMaster : NetworkBehaviour {
 
     public override void OnStartServer()
     {
-        Debug.Log("pOUET");
+        Debug.Log("OnStartServer GameMaster", this);
         base.OnStartServer();
         StartCoroutine(waitForAllPlayers());
     }
 
     IEnumerator waitForAllPlayers ()
     {
-        Debug.Log("Coroutine");
         while (NetworkServer.connections.Count < 2)
         {
-            Debug.Log("Test");
             yield return null;
 
         }
+
+       
         yield return new WaitForEndOfFrame();
+        Debug.Log("2 players online, Fire RPC", this);
         RpcStartGame();
+    }
+
+    void CreatePlayers ()
+    {
+
     }
 
     [ClientRpc]
     public void RpcStartGame ()
     {
-        Debug.Log("StartGame");
+        Debug.Log("RPC StartGame, launch OnGameStarts", this);
         
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();
