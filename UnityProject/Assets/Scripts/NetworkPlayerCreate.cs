@@ -7,13 +7,12 @@ public class NetworkPlayerCreate : NetworkBehaviour
     public bool isReady = false;
 
     //Use this for initialization
-    void Start ()
+    void Awake ()
     {
-        //SetOwner();
+        
     }
 
-    [ClientRpc]
-    public void RpcSetOwner()
+    public void SetOwner()
     {
         Debug.Log("Set Owner , isLocalPlayer = " + isLocalPlayer, this);
         if (!isLocalPlayer)
@@ -36,7 +35,7 @@ public class NetworkPlayerCreate : NetworkBehaviour
     public override void OnStartServer ()
     {
         Debug.Log("OnStartServer", this);
-
+        SetOwner();
     }
 
     public override void OnStartClient ()
@@ -48,7 +47,7 @@ public class NetworkPlayerCreate : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         Debug.Log("OnStartLocalPlayer isLocalPlayer =  "+isLocalPlayer, this);
-        //SetOwner();
+        SetOwner();
        // GetComponent<Character>().OnGameStarts();
     }
 }

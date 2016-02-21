@@ -13,7 +13,6 @@ public class CustomNetworkManager : NetworkManager {
         GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         playerInstances.Add(player);
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
-        player.GetComponent<NetworkPlayerCreate>().RpcSetOwner();
         StartCoroutine(CheckAllPlayersSpawned());
     }
 
