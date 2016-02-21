@@ -10,6 +10,7 @@ public class PlayerHandHUD : NetworkBehaviour {
 
     public List<Card> cards = new List<Card>();
 
+    [SyncVar(hook ="OnPowerCardCountChange")]
     public int powerCardsCount = 0;
 
     public Owner owner = Owner.NONE;
@@ -19,7 +20,7 @@ public class PlayerHandHUD : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        powerCardsCount = 4;
+        Cmd_SetPowerCardsCount (4);
         if (cardParent == null) cardParent = transform;
     }
 	
@@ -27,6 +28,23 @@ public class PlayerHandHUD : NetworkBehaviour {
 	void Update () {
 	
 	}
+
+    [Command]
+    public void Cmd_SetPowerCardsCount ( int value )
+    {
+        powerCardsCount = value;
+    }
+
+    [Command]
+    public void Cmd_AddPowerCardsCount(int delta)
+    {
+        powerCardsCount += delta;
+    }
+
+    void OnPowerCardCountChange (int value )
+    {
+        powerCardsCount = value;
+    }
 
     public void AddCard ( )
     {

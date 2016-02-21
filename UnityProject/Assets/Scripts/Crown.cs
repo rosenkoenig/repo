@@ -37,10 +37,8 @@ public class Crown : MonoBehaviour {
 
     public bool GoTo ( Square square, Owner owner )
     {
-        bool canGo = CanGoTo(square, owner, false, false);
-        if (canGo)
-        {
-            if (withPowerCard && square.owner == Owner.NONE) GameMaster.Instance.GetHandHUDFor(owner).powerCardsCount++;
+       
+            if (withPowerCard && square.owner == Owner.NONE) GameMaster.Instance.GetHandHUDFor(owner).Cmd_AddPowerCardsCount(+1);
 
             targetPosition = square.transform.position;
             if (displacementCoroutine != null ) StopCoroutine(displacementCoroutine);
@@ -48,9 +46,9 @@ public class Crown : MonoBehaviour {
             square.SetOwner(owner);
             currentSquare = square;
 
-        }
+        
 
-        return canGo;
+        return true;
 
     }
 

@@ -46,7 +46,7 @@ public class PowerCard : MonoBehaviour {
 
         if ((myHandHUD.powerCardsCount > 0 || (myHandHUD.powerCardsCount == 0 && crown.withPowerCard)) && GameMaster.Instance.turnIndex == (int)owner)
         {
-            myHandHUD.powerCardsCount += crown.withPowerCard ? 1 : -1;
+            myHandHUD.Cmd_AddPowerCardsCount(crown.withPowerCard ? 1 : -1);
             crown.SetPowerCardState(!crown.withPowerCard);
             selectedFeedback.SetActive(crown.withPowerCard);
         }
