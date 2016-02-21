@@ -157,7 +157,7 @@ public class Card : MonoBehaviour {
 
         if (canMove)
         {
-            GameMaster.Instance.OnCardUsed(cardInfos.id);
+          GameMaster.Instance.OnCardUsed(cardInfos.id);
             return true;
         }
 

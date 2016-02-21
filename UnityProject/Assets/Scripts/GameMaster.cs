@@ -233,20 +233,24 @@ public class GameMaster : NetworkBehaviour {
     
     public void OnCardUsed ( int id )
     {
-        Cmd_PlayCardOnAllClient(id);
+        foreach (PlayerHandHUD player in playerHandHuds)
+        {
+            foreach (Card card in player.cards)
+            {
+                if (card.cardInfos.id == id)
+                {
+                    player.UseCard(id);
+                    return;
+                }
+            }
+        }
+
     }
 
-    [Command]
-    void Cmd_PlayCardOnAllClient(int id )
-    {
-        if (isServer)
-        {
-            Rpc_ApplyCardEffect(id);
-        }
-    }
+   
 
     [ClientRpc]
-    void Rpc_ApplyCardEffect (int id)
+    public void Rpc_ApplyCardEffect (int id)
     {
         foreach (PlayerHandHUD player in playerHandHuds)
         {

@@ -43,7 +43,25 @@ public class PlayerHandHUD : NetworkBehaviour {
         cards.Add(visualCard);
     }
 
-    
+    public void UseCard (int id)
+    {
+        if (isClient)
+        {
+            
+            Cmd_PlayCardOnAllClient(id);
+        }
+
+    }
+
+    [Command]
+    public void Cmd_PlayCardOnAllClient(int id)
+    {
+        if (isServer)
+        {
+            GameMaster.Instance.Rpc_ApplyCardEffect(id);
+        }
+    }
+
     public void RemoveCard ( int id )
     {
         Card card = GetCardFromId(id);
