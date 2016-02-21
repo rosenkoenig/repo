@@ -61,16 +61,17 @@ public class GameMaster : NetworkBehaviour {
 
     public override void OnStartServer()
     {
+        Debug.Log("pOUET");
         base.OnStartServer();
-        waitForAllPlayers();
+        StartCoroutine(waitForAllPlayers());
     }
 
     IEnumerator waitForAllPlayers ()
     {
-
+        Debug.Log("Coroutine");
         while (NetworkServer.connections.Count < 2)
         {
-
+            Debug.Log("Test");
             yield return null;
 
         }
