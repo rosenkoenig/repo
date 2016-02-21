@@ -11,7 +11,7 @@ public enum GameState
     FINISHED,
 }
 
-public class GameMaster : MonoBehaviour {
+public class GameMaster : NetworkBehaviour {
     public static GameMaster Instance;
 
     [Tooltip("0 = PLAYER_0,\n1 = PLAYER_1")]
@@ -49,7 +49,6 @@ public class GameMaster : MonoBehaviour {
 
 	void Start ()
     {
-        StartCoroutine("simulateLoading");
         
     }
 
@@ -60,7 +59,13 @@ public class GameMaster : MonoBehaviour {
         StartCoroutine("simulateLoading");
     }
 
-    IEnumerator simulateLoading ()
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        waitForAllPlayers();
+    }
+
+    IEnumerator waitForAllPlayers ()
     {
 
         while (NetworkServer.connections.Count < 2)
@@ -72,6 +77,7 @@ public class GameMaster : MonoBehaviour {
         StartGame();
     }
 
+    [ClientRpc]
     public void StartGame ()
     {
         Debug.Log("StartGame");
