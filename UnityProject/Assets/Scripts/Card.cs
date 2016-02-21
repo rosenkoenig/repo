@@ -17,7 +17,7 @@ public enum Direction
 [System.Serializable]
 public class CardInfos
 {
-
+    public int id = 0;
     public Vector2 direction = Vector2.one;
 
     public int nb_squares = 0;
@@ -30,7 +30,7 @@ public class Card : MonoBehaviour {
 
     public CardInfos cardInfos = new CardInfos();
 
-    public System.Action<Card> onCardIsPlayed = null;
+    public System.Action<int> onCardIsPlayed = null;
 
     RectTransform rectTransform = null;
     LayoutGroup layoutGroup = null;
@@ -155,15 +155,21 @@ public class Card : MonoBehaviour {
 
         bool canMove = Crown.Instance.CanGoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner, Crown.Instance.withPowerCard, true);
 
-        if (canMove && Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner))
+        if (canMove)
         {
-            if (onCardIsPlayed != null) onCardIsPlayed(this);
-           gameMaster.OnPlayerEndTurn();
-            Destroy(gameObject);
+            GameMaster.Instance.OnCardUsed(cardInfos.id);
             return true;
         }
 
         return false;
+    }
+
+    public void ApllyEffect ()
+    {
+        if (onCardIsPlayed != null) onCardIsPlayed(cardInfos.id);
+        gameMaster.OnPlayerEndTurn();
+        Crown.Instance.GoTo(cardInfos.direction * cardInfos.nb_squares, cardInfos.owner);
+        Destroy(gameObject);
     }
 
     public void OnClick ()

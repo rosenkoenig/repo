@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayerHandHUD : MonoBehaviour {
+public class PlayerHandHUD : NetworkBehaviour {
     
-
     [SerializeField]
     GameObject cardPrefab = null;
 
@@ -43,8 +43,11 @@ public class PlayerHandHUD : MonoBehaviour {
         cards.Add(visualCard);
     }
 
-    public void RemoveCard ( Card card )
+    
+    public void RemoveCard ( int id )
     {
+        Card card = GetCardFromId(id);
+
         if ( cards.Contains(card))
         {
             card.onCardIsPlayed -= RemoveCard;
@@ -53,4 +56,17 @@ public class PlayerHandHUD : MonoBehaviour {
         }
 
     }
+
+    Card GetCardFromId ( int id )
+    {
+        foreach ( Card card in cards)
+        {
+            if (card.cardInfos.id == id) return card;
+        }
+
+        return null;
+    }
+    
+    
+
 }

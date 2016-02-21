@@ -72,7 +72,9 @@ public class Pioche : MonoBehaviour {
                 CardInfos card = new CardInfos();
                 card.direction = finalDir;
                 card.nb_squares = j;
+                card.id = cards.Count;
                 cards.Add(card);
+                
             }
 
         }

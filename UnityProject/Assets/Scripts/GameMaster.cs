@@ -50,7 +50,7 @@ public class GameMaster : NetworkBehaviour {
 
 	void Start ()
     {
-        
+        turnIndex = isServer ? 0 : 1;
     }
 
     public void OnAllPlayersCreated ()
@@ -158,6 +158,7 @@ public class GameMaster : NetworkBehaviour {
         turnIndex = turnIndex == 0 ? 1 : 0;
         Crown.Instance.SetPowerCardState(false);
         if (onTurnEnds != null) onTurnEnds();
+
         if (!CheckCanPlay((Owner)turnIndex))
         {
             if ( !CheckCanPlay((Owner)(turnIndex == 0 ? 1 : 0)))
@@ -229,6 +230,36 @@ public class GameMaster : NetworkBehaviour {
         availableTokens--;
     }
 
+    
+    public void OnCardUsed ( int id )
+    {
+        Cmd_PlayCardOnAllClient(id);
+    }
+
+    [Command]
+    void Cmd_PlayCardOnAllClient(int id )
+    {
+        if (isServer)
+        {
+            Rpc_ApplyCardEffect(id);
+        }
+    }
+
+    [ClientRpc]
+    void Rpc_ApplyCardEffect (int id)
+    {
+        foreach (PlayerHandHUD player in playerHandHuds)
+        {
+            foreach (Card card in player.cards)
+            {
+                if (card.cardInfos.id == id)
+                {
+                    card.ApllyEffect();
+                    return;
+                }
+            }
+        }
+    }
 
     IEnumerator PasseLeTour (Owner owner)
     {
