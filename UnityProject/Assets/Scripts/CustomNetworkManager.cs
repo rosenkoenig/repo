@@ -12,8 +12,8 @@ public class CustomNetworkManager : NetworkManager {
     {
         GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         playerInstances.Add(player);
-        player.GetComponent<NetworkPlayerCreate>().SetOwner();
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
+        player.GetComponent<NetworkPlayerCreate>().SetOwner();
         CheckAllPlayersSpawned();
     }
 
@@ -21,6 +21,14 @@ public class CustomNetworkManager : NetworkManager {
     {
         if ( playerInstances.Count >= 2)
         {
+            foreach ( GameObject go in playerInstances)
+            {
+                if ( !go.GetComponent<NetworkPlayerCreate>().isReady)
+                {
+                    return;
+                }
+            }
+
             GameMaster.Instance.OnAllPlayersCreated();
         }
     }

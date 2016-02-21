@@ -79,11 +79,18 @@ public class GameMaster : NetworkBehaviour {
     public void RpcStartGame ()
     {
         Debug.Log("RPC StartGame, launch OnGameStarts", this);
-        
+
+        wait();
+    }
+	
+
+    IEnumerator wait ()
+    {
+
+        yield return new WaitForSeconds(2f);
         if (onLoadingIsOver != null) onLoadingIsOver();
         if (onGameStarts != null) onGameStarts();
     }
-	
 	// Update is called once per frame
 	void Update () {
         CheckPause();
