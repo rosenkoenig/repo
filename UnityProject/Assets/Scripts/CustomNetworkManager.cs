@@ -2,9 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
-
+using UnityEngine.Networking.Match;
 
 public class CustomNetworkManager : NetworkManager {
+
+    void Start ()
+    {
+        Connect();
+    }
+
+    void Connect ()
+    {
+        StartMatchMaker();
+        matchMaker.ListMatches(0, 10, "", OnMatchList);
+    }
+
+    public override void OnMatchList(ListMatchResponse matchList)
+    {
+        base.OnMatchList(matchList);
+        if ( matchList.matches.Count <= 0 )
+        {
+            //create matchs
+            matchMaker.CreateMatch("server", 2u, false, "", OnMatchCreate);
+        }
+        else
+        {
+            //connect
+            MatchDesc match = matchList.matches[0];
+            matchMaker.JoinMatch(match.networkId, "", OnMatchJoined);
+        }
+        
+    }
+
 
     public List<GameObject> playerInstances = new List<GameObject>();
 
